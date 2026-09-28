@@ -29,6 +29,7 @@ Evaluated on the benchmark **DEAP (Database for Emotion Analysis using Physiolog
 
 ## 🏛 Framework Architecture
 
+```text
 Raw EEG Data (32 Subjects × 40 Trials × 14 Channels × 8064 Samples)
                               │
   [Sliding Window: Size=512 (4s), Step=16 (0.125s), Fs=128 Hz]
@@ -180,5 +181,4 @@ If you find this codebase or research useful, please cite our paper:
 
 For technical questions or prospective research discussions, please contact:
 - **Avin Amiri** — [zahraamiri@khu.ac.ir](mailto:zahraamiri@khu.ac.ir)
-
 ```
