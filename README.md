@@ -1,4 +1,3 @@
-
 ```markdown
 # A CNN-LSTM Framework for EEG-Based Emotion Recognition
 
@@ -20,10 +19,10 @@ Official implementation of the paper:
 Accurate emotion recognition from electroencephalogram (EEG) signals requires capturing localized spectral-spatial patterns across critical brain regions as well as sequential dependencies across time segments.
 
 This repository provides an end-to-end deep learning framework that:
-1. **Extracts Band Power Spectral Density (PSD):** Decomposes raw EEG signals from 14 salient cortical channels across 5 frequency bands ($\theta$, $\alpha$, slow-$\beta$, $\beta$, $\gamma$) using a sliding window of 4 seconds ($512$ points) with step size of $0.125$ seconds ($16$ points), generating a 70-dimensional spatial-spectral feature vector.
+1. **Extracts Band Power Spectral Density (PSD):** Decomposes raw EEG signals from 14 salient cortical channels across 5 frequency bands ($\theta$, $\alpha$, slow-$\beta$, $\beta$, $\gamma$) using a sliding window of 4 seconds (512 points) with step size of 0.125 seconds (16 points), generating a 70-dimensional spatial-spectral feature vector.
 2. **Deep Hierarchical Feature Extraction (3-Stage 1D-CNN):** Employs multi-scale 1D Convolutional blocks with Batch Normalization, Max Pooling, and Dropout (0.2) to capture hierarchical spatial representations.
 3. **Sequence & Dynamics Modeling (Regularized LSTM):** Utilizes an $L_2$-regularized Long Short-Term Memory layer to model temporal contextual transitions across feature representations.
-4. **Dense Classification:** Multi-layer perceptron (MLP) with Batch Normalization, Dropout, and $L_2$ regularization for binary emotion state classification (configured by default for Arousal; adjustable to Valence).
+4. **Dense Classification:** Multi-layer perceptron (MLP) with Batch Normalization, Dropout, and $L_2$ regularization for binary emotion state classification (configured by default for Arousal; easily adjustable to Valence).
 
 Evaluated on the benchmark **DEAP (Database for Emotion Analysis using Physiological Signals)** dataset using stratified splits.
 
@@ -31,7 +30,7 @@ Evaluated on the benchmark **DEAP (Database for Emotion Analysis using Physiolog
 
 ## 🏛 Framework Architecture
 
-```
+```text
 Raw EEG Data (32 Subjects × 40 Trials × 14 Channels × 8064 Samples)
                               │
   [Sliding Window: Size=512 (4s), Step=16 (0.125s), Fs=128 Hz]
@@ -89,7 +88,7 @@ Frontal, Temporal, Parietal, and Occipital channels:
 │   └── raw_deap/          # Place DEAP dataset files: s01.dat to s32.dat
 ├── results/               # Generated artifacts (models, plots, metrics)
 ├── CNN_LSTM.py            # Complete end-to-end preprocessing, training & evaluation
-├── requirements.txt       # Dependencies
+├── requirement.txt        # Dependencies
 ├── .gitignore             # Git ignore rules for checkpoints and large arrays
 └── README.md
 ```
@@ -111,7 +110,7 @@ source .venv/bin/activate    # On Windows: .venv\Scripts\activate
 ### 2. Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirement.txt
 ```
 
 ---
@@ -183,4 +182,5 @@ If you find this codebase or research useful, please cite our paper:
 
 For technical questions or prospective research discussions, please contact:
 - **Avin Amiri** — [zahraamiri@khu.ac.ir](mailto:zahraamiri@khu.ac.ir)
+
 ```
