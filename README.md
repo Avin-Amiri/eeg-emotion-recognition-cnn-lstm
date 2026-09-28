@@ -72,11 +72,11 @@ Frontal, Temporal, Parietal, and Occipital channels capturing emotional and cogn
 ### 2. Frequency Bands
 | Frequency Band | Range (Hz) | Neural Relevance |
 |---|---|---|
-| **Theta ($\theta$)** | 4 – 8 Hz | Drowsiness, deep emotional states, meditation |
-| **Slow Alpha (slow-$\alpha$)** | 8 – 10 Hz | Calmness, resting state |
-| **Alpha ($\alpha$)** | 12 – 16 Hz | Relaxed alertness, internal focus |
-| **Beta ($\beta$)** | 16 – 25 Hz | Active thinking, focus, emotional arousal |
-| **Gamma ($\gamma$)** | 25 – 45 Hz | High-level cognitive processing, multi-modal integration |
+| **Theta ($\theta$)** | 4 – 8 Hz | Drowsiness, deep emotional states |
+| **Alpha ($\alpha$)** | 8 – 12 Hz | Relaxed alertness, internal focus |
+| **Slow Beta** | 12 – 16 Hz | Active processing |
+| **Beta ($\beta$)** | 16 – 25 Hz | Focused thinking, emotional arousal |
+| **Gamma ($\gamma$)** | 25 – 45 Hz | High-level cognitive processing |
 
 ---
 
@@ -132,8 +132,9 @@ python CNN_LSTM.py
 ```
 
 ### Step 3: Outputs & Evaluation
-- Trained model checkpoints are saved automatically to `checkpoint.keras`.
-- Generates detailed confusion matrix and classification reports (Accuracy, Precision, Recall, F1-Score).
+- Trained model checkpoints are saved automatically to `results/best_model.keras`.
+- Saves training loss/accuracy curves to `results/training_history.png`.
+- Evaluates test predictions and saves the confusion matrix to `results/confusion_matrix.png` and `results/results.pkl`.
 
 ---
 
