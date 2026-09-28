@@ -15,7 +15,7 @@ Official implementation of the paper:
 
 ## 📌 Overview
 
-The advancement of deep learning architectures, contributes to the effective design of methods for EEG based emotion recognition. In this code, a CNN-LSTM model is presented, where 1D-CNN reduces dimensionality and extracts meaningful features before passing to LSTM, which improving computational efficiency. This architecture provides better detection results compared to using either CNN or LSTM by combining these two model in an efficient way and change the window size in feature extracting to extract better features. The experimental results on the DEAP dataset demonstrate its superior performance.
+The advancement of deep learning architectures, contributes to the effective design of methods for EEG based emotion recognition. In this code, a CNN-LSTM model is presented, where 1D-CNN reduces dimensionality and extracts meaningful features before passing to LSTM, which improves computational efficiency. This architecture provides better detection results compared to using either CNN or LSTM by combining these two model in an efficient way and change the window size in feature extracting to extract better features. The experimental results on the DEAP dataset demonstrate its superior performance.
 
 ## 🏛 Framework Architecture
 
@@ -59,9 +59,14 @@ Raw EEG Data (32 Subjects × 40 Trials × 14 Channels × 8064 Samples)
 Channels selected by array indices from the DEAP preprocessed dataset:
 `channel = [1, 2, 3, 4, 6, 11, 13, 17, 19, 20, 21, 25, 29, 31]`
 
+### Frequency Bands
+Spectral power features are extracted across 5 standard EEG bands (`[4, 8, 12, 16, 25, 45]` Hz):
 
-### Frequency Bands (pe.bin_power bins)
-Features are extracted using 5 spectral power bins defined by `[4, 8, 12, 16, 25, 45]` Hz:
+- **Theta ($\theta$):** 4 – 8 Hz
+- **Alpha ($\alpha$):** 8 – 12 Hz
+- **Low Beta ($\beta_1$):** 12 – 16 Hz
+- **High Beta ($\beta_2$):** 16 – 25 Hz
+- **Gamma ($\gamma$):** 25 – 45 Hz
 
 ---
 
@@ -72,7 +77,7 @@ Features are extracted using 5 spectral power bins defined by `[4, 8, 12, 16, 25
 │   └── raw_deap/          # Place DEAP dataset files: s01.dat to s32.dat
 ├── results/               # Generated artifacts (models, plots, metrics)
 ├── CNN_LSTM.py            # Complete end-to-end preprocessing, training & evaluation
-├── requirement.txt        # Dependencies
+├── requirements.txt        # Dependencies
 ├── .gitignore             # Git ignore rules for checkpoints and large arrays
 └── README.md
 ```
@@ -120,9 +125,9 @@ python CNN_LSTM.py
 *Note: The target label is set to Arousal by default (`label_idx = 0`). Modify `label_idx` in `CNN_LSTM.py` for other dimensions (e.g., `1` for Valence).*
 
 ### Step 3: Outputs & Evaluation
-- Trained model weights are saved automatically to `root/best_model.keras`.
-- Learning curves are saved to `root/training_history.png`.
-- Test set performance and confusion matrix are saved to `root/confusion_matrix.png` and `results/results.pkl`.
+- Trained model weights: `results/best_model.keras`
+- Training curves: `results/accuracy.png` & `results/loss.png`
+- Evaluation metrics & confusion matrix: `results/confusion_matrix.png` & `results/results.pkl`
 
 ---
 
