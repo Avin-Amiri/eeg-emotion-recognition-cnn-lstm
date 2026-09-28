@@ -67,7 +67,7 @@ Raw EEG Data (32 Subjects × 40 Trials × 14 Channels × 8064 Samples)
 
 ### 1. Selected 14 EEG Channels (10–20 System)
 Frontal, Temporal, Parietal, and Occipital channels:
-- `Fp1`, `AF3`, `F3`, `F7`, `FC5`, `T7`, `P7`, `O1`, `Oz`, `Pz`, `Fp2`, `AF4`, `Fz`, `F4`
+-  channel = [1, 2, 3, 4, 6, 11, 13, 17, 19, 20, 21, 25, 29, 31] ----> `Fp1`, `AF3`, `F3`, `F7`, `FC5`, `T7`, `P7`, `O1`, `Oz`, `Pz`, `Fp2`, `AF4`, `Fz`, `F4`
 
 ### 2. Frequency Bands
 | Frequency Band | Range (Hz) | Neural Relevance |
