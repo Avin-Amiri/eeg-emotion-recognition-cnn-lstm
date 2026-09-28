@@ -1,4 +1,3 @@
-````markdown
 # A CNN-LSTM Framework for EEG-Based Emotion Recognition
 
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
@@ -178,4 +177,3 @@ If you find this codebase or research useful, please cite our paper:
 
 For technical questions or prospective research discussions, please contact:
 - **Avin Amiri** — [zahraamiri@khu.ac.ir](mailto:zahraamiri@khu.ac.ir)
-````
