@@ -1,4 +1,3 @@
-```markdown
 # A CNN-LSTM Framework for EEG-Based Emotion Recognition
 
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
@@ -30,7 +29,6 @@ Evaluated on the benchmark **DEAP (Database for Emotion Analysis using Physiolog
 
 ## 🏛 Framework Architecture
 
-```text
 Raw EEG Data (32 Subjects × 40 Trials × 14 Channels × 8064 Samples)
                               │
   [Sliding Window: Size=512 (4s), Step=16 (0.125s), Fs=128 Hz]
