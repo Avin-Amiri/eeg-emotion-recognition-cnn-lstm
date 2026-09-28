@@ -24,7 +24,7 @@ Raw EEG Data (32 Subjects × 40 Trials × 14 Channels × 8064 Samples)
                               │
   [Sliding Window: Size=512 (4s), Step=16 (0.125s), Fs=128 Hz]
                               │
-    [Band-Power Feature Extraction (pe.bin_power): 4-8, 8-12, 12-16, 16-25, 25-45 Hz]
+    [Band-Power Feature Extraction (band-power): 4-8, 8-12, 12-16, 16-25, 25-45 Hz]
                               │
           Shape: (Batch, 70, 1) — 14 Channels × 5 Spectral Bands
                               │
