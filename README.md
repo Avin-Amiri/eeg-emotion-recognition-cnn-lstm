@@ -1,107 +1,181 @@
 ````markdown
-## A CNN LSTM Framework for EEG-Based Emotion Recognition
-
+# A CNN-LSTM Framework for EEG-Based Emotion Recognition
 
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
-[![PyTorch 2.x](https://img.shields.io/badge/PyTorch-2.x-EE4C2C.svg)](https://pytorch.org/)
-[![PyG](https://img.shields.io/badge/PyG-PyTorch--Geometric-3C2179.svg)](https://pyg.org/)
+[![TensorFlow 2.x](https://img.shields.io/badge/TensorFlow-2.x-FF6F00.svg)](https://tensorflow.org/)
+[![Keras](https://img.shields.io/badge/Keras-D00000.svg)](https://keras.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-
-
-This repository contains the official implementation of the hybrid deep learning model proposed for EEG-based emotion recognition using the **DEAP** dataset. The pipeline extracts power spectral density (PSD) features across standard EEG frequency bands and employs a cascading 1D-CNN and LSTM network to capture spatial-frequency and temporal dynamics for **Valence**, **Arousal**, **dominance** and **liking** classification.
-
----
-
-## 📌 Architecture Overview
-
-1. **Feature Extraction:**
-   - 14 targeted EEG channels (frontal, temporal, and parietal lobes).
-   - Frequency band decomposition using PyEEG: Theta (4–8 Hz), Slow Alpha (8–10 Hz), Alpha (8–12 Hz), Beta (12–30 Hz), and Gamma (30–45 Hz).
-   - Spectral power features flattened per time window.
-
-2. **Classification Network:**
-   - **Spatial/Local Feature Extraction:** 1D Convolutional layers (`Conv1D`) with `BatchNormalization`, `GaussianNoise`, and `Dropout`.
-   - **Temporal Modeling:** Long Short-Term Memory (`LSTM`) units to model sequential transitions across EEG segments.
-   - **Dense Classifier:** Fully connected layers with Softmax output for 2-class / multi-class classification.
+Official implementation of the paper:  
+**"A CNN-LSTM Framework for EEG-Based Emotion Recognition"**  
+*Zahra Amiri, Azadeh Mansouri*  
+*Department of Electrical and Computer Engineering, Kharazmi University, Tehran, Iran*  
+*Presented at the 15th International Conference on Computer and Knowledge Engineering (ICCKE 2025)*
 
 ---
 
-## 📂 Project Structure
+## 📌 Overview
+
+Accurate emotion recognition from electroencephalogram (EEG) signals requires capturing localized spectral-spatial patterns across critical brain regions as well as sequential dependencies across time segments.
+
+This repository provides an end-to-end deep learning framework that:
+1. **Extracts Band Power Spectral Density (PSD):** Decomposes raw EEG signals from 14 salient cortical channels across 5 canonical frequency bands ($\theta$, slow $\alpha$, $\alpha$, $\beta$, $\gamma$) using a sliding window of 4 seconds ($512$ points) with step size of $0.125$ seconds ($16$ points), generating a 70-dimensional spatial-spectral feature vector.
+2. **Deep Hierarchical Feature Extraction (3-Stage 1D-CNN):** Employs multi-scale 1D Convolutional blocks with Batch Normalization, Max Pooling, and Dropout to capture hierarchical spatial representations.
+3. **Sequence & Dynamics Modeling (Regularized LSTM):** Utilizes an $L_2$-regularized Long Short-Term Memory layer to model temporal contextual transitions across feature representations.
+4. **Dense Classification:** Multi-layer perceptron (MLP) with Batch Normalization and Dropout for robust emotion state classification (Arousal / Valence).
+
+Evaluated on the benchmark **DEAP (Database for Emotion Analysis using Physiological Signals)** dataset using stratified splits.
+
+---
+
+## 🏛 Framework Architecture
+
+```
+Raw EEG Data (32 Subjects × 40 Trials × 14 Channels × 8064 Samples)
+                              │
+  [Sliding Window: Size=512 (4s), Step=16 (0.125s), Fs=128 Hz]
+                              │
+  [Band-Power Feature Extraction (pe.bin_power): θ, slow-α, α, β, γ]
+                              │
+          Shape: (Batch, 70, 1) — 14 Channels × 5 Spectral Bands
+                              │
+┌─────────────────────────────┴─────────────────────────────┐
+│ Stage 1: Multi-Scale 1D-CNN Spatial-Spectral Extraction   │
+│   • Conv1D (256 filters, k=7) + BatchNorm + MaxPool1D(2) │
+│   • Conv1D (128 filters, k=5) + BatchNorm + MaxPool1D(2) │
+│   • Conv1D (64 filters,  k=3) + BatchNorm + MaxPool1D(2) │
+│   • Gaussian Noise Injection (σ = 0.02)                   │
+└─────────────────────────────┬─────────────────────────────┘
+                              │
+┌─────────────────────────────┴─────────────────────────────┐
+│ Stage 2: Temporal Sequence Encoding (LSTM)                │
+│   • LSTM (128 units, tanh) + L2 Regularization            │
+│   • Batch Normalization + Dropout (0.20)                  │
+└─────────────────────────────┬─────────────────────────────┘
+                              │
+┌─────────────────────────────┴─────────────────────────────┐
+│ Stage 3: Fully Connected Classifier & Inference           │
+│   • Dense (384) + BatchNorm + Dropout (0.20)              │
+│   • Dense (64)  + BatchNorm + Dropout (0.20)              │
+│   • Dense (32)  + Dropout (0.15)                          │
+│   • Output Dense (Softmax) ──► Emotion Classes Logits     │
+└───────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📊 Channel & Frequency Configurations
+
+### 1. Selected 14 EEG Channels (10–20 System)
+Frontal, Temporal, Parietal, and Occipital channels capturing emotional and cognitive responses:
+- `Fp1`, `AF3`, `F3`, `F7`, `FC5`, `T7`, `P7`, `O1`, `Oz`, `Pz`, `Fp2`, `AF4`, `Fz`, `F4`
+
+### 2. Frequency Bands
+| Frequency Band | Range (Hz) | Neural Relevance |
+|---|---|---|
+| **Theta ($\theta$)** | 4 – 8 Hz | Drowsiness, deep emotional states, meditation |
+| **Slow Alpha (slow-$\alpha$)** | 8 – 10 Hz | Calmness, resting state |
+| **Alpha ($\alpha$)** | 12 – 16 Hz | Relaxed alertness, internal focus |
+| **Beta ($\beta$)** | 16 – 25 Hz | Active thinking, focus, emotional arousal |
+| **Gamma ($\gamma$)** | 25 – 45 Hz | High-level cognitive processing, multi-modal integration |
+
+---
+
+## 📁 Repository Structure
 
 ```text
 ├── data/
-│   └── raw_deap/          # Place s01.dat to s32.dat here (excluded via .gitignore)
-├── CNN_LSTM.py            # Main preprocessing, training, and evaluation script
-├── requirements.txt       # Python dependencies
-├── .gitignore
+│   └── raw_deap/          # Place DEAP dataset files: s01.dat to s32.dat
+├── CNN_LSTM.py            # Complete end-to-end preprocessing, training & evaluation
+├── requirements.txt       # Dependencies
+├── .gitignore             # Git ignore rules for checkpoints and large arrays
 └── README.md
 ```
 
 ---
 
-## ⚙️ Installation
+## ⚙️ Installation & Environment Setup
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Avin-Amiri/eeg-emotion-recognition-cnn-lstm.git
-   cd eeg-emotion-recognition-cnn-lstm
-   ```
+### 1. Clone & Virtual Environment
 
-2. **Create and activate a virtual environment:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate       # On Linux/macOS
-   # or: venv\Scripts\activate    # On Windows
-   ```
+```bash
+git clone https://github.com/Avin-Amiri/eeg-emotion-recognition-cnn-lstm.git
+cd eeg-emotion-recognition-cnn-lstm
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+python -m venv .venv
+source .venv/bin/activate    # On Windows: .venv\Scripts\activate
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
-## 📊 Dataset Preparation
+## 🚀 Execution & Usage
 
-1. Download the preprocessed Python version (`data_preprocessed_python.zip`) of the **DEAP dataset** from the [official DEAP portal](https://www.eecs.qmul.ac.uk/mmv/datasets/deap/).
-2. Extract the files (`s01.dat` through `s32.dat`) into the directory:
-   ```text
-   data/raw_deap/
-   ```
+### Step 1: Data Preparation
+Download the preprocessed Python version (`data_preprocessed_python.zip`) of the **DEAP dataset** and place the participant files inside `data/raw_deap/`:
+```text
+data/raw_deap/s01.dat
+data/raw_deap/s02.dat
+...
+data/raw_deap/s32.dat
+```
 
----
-
-## 🚀 Usage
-
-Run the complete pipeline (data loading, band-power feature extraction, training, and evaluation):
+### Step 2: Run Training Pipeline
+Run the script to extract spectral power features, train the CNN-LSTM network, and evaluate performance:
 
 ```bash
 python CNN_LSTM.py
 ```
 
-The script outputs:
-- Real-time training metrics (Loss, Accuracy per epoch).
-- Confusion Matrix and classification metrics (Precision, Recall, F1-Score).
-- Serialized model checkpoints (`.keras`) in the designated artifacts directory.
+### Step 3: Outputs & Evaluation
+- Trained model checkpoints are saved automatically to `checkpoint.keras`.
+- Generates detailed confusion matrix and classification reports (Accuracy, Precision, Recall, F1-Score).
 
 ---
 
-## 📑 Citation
+## 🔬 Hyperparameters
 
-If you find this work or code useful in your research, please cite:
+| Hyperparameter | Value | Description |
+|---|---|---|
+| Input Dimension | $(N, 70, 1)$ | 14 channels $\times$ 5 frequency bands |
+| Window Size | 512 samples (4.0 s) | Sliding time window |
+| Step Size | 16 samples (0.125 s) | Sliding window overlap |
+| Sampling Rate ($F_s$) | 128 Hz | Downsampled DEAP rate |
+| Conv1D Stages | 3 layers | Filter sizes: 256 ($k=7$), 128 ($k=5$), 64 ($k=3$) |
+| LSTM Units | 128 | $\text{tanh}$ activation, $L_2$ kernel/recurrent reg ($1\times 10^{-4}$) |
+| Optimizer | Adam | Learning Rate: $4 \times 10^{-4}$ |
+| Loss Function | Categorical Crossentropy | Multi-class / Binary classification |
+| Batch Size | 1024 | Mini-batch sample size |
+| Max Epochs | 300 | Guarded by Early Stopping |
+| Early Stopping | Patience = 12 | Monitored on `val_loss` ($\text{min\_delta} = 1\times 10^{-4}$) |
+| LR Scheduler | ReduceLROnPlateau | Factor = 0.1, Patience = 3, Min LR = $1\times 10^{-5}$ |
+| Train / Test Split | 80% / 20% | Stratified shuffle split |
+
+---
+
+## 📖 Citation
+
+If you find this codebase or research useful, please cite our paper:
 
 ```bibtex
-@inproceedings{amiri2025eeg,
+@inproceedings{amiri2025cnn,
   title={A CNN LSTM Framework for EEG-Based Emotion Recognition},
   author={Amiri, Zahra and Mansouri, Azadeh},
-  booktitle={Proceedings of the International Conference on Computer and Knowledge Engineering (ICCKE)},
-  year={2025}
+  booktitle={Proceedings of the 15th International Conference on Computer and Knowledge Engineering (ICCKE 2025)},
+  year={2025},
+  organization={Faculty of Engineering, Kharazmi University}
 }
 ```
 
 ---
 
+## 📬 Contact & Inquiries
 
-Distributed under the MIT License. See `LICENSE` for more information.
+For technical questions or prospective research discussions, please contact:
+- **Avin Amiri** — [zahraamiri@khu.ac.ir](mailto:zahraamiri@khu.ac.ir)
 ````
