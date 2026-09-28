@@ -151,7 +151,7 @@ python CNN_LSTM.py
 | Loss Function | Categorical Crossentropy | Multi-class / Binary classification |
 | Batch Size | 1024 | Mini-batch sample size |
 | Max Epochs | 300 | Guarded by Early Stopping |
-| Early Stopping | Patience = 12 | Monitored on `val_loss` ($\text{min\_delta} = 1\times 10^{-4}$) |
+| Early Stopping | Patience = 12 | Monitored on `val_loss` (`min_delta` = $1\times 10^{-4}$) |
 | LR Scheduler | ReduceLROnPlateau | Factor = 0.1, Patience = 3, Min LR = $1\times 10^{-5}$ |
 | Train / Test Split | 80% / 20% | Stratified shuffle split |
 
