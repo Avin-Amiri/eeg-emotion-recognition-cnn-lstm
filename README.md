@@ -1,7 +1,7 @@
 ````markdown
-# EEG-Based Emotion Recognition Using a Hybrid CNN-LSTM Architecture
+## A CNN LSTM Framework for EEG-Based Emotion Recognition
 
-This repository contains the official implementation of the hybrid deep learning model proposed for EEG-based emotion recognition using the **DEAP** dataset. The pipeline extracts power spectral density (PSD) features across standard EEG frequency bands and employs a cascading 1D-CNN and LSTM network to capture spatial-frequency and temporal dynamics for **Valence** and **Arousal** classification.
+This repository contains the official implementation of the hybrid deep learning model proposed for EEG-based emotion recognition using the **DEAP** dataset. The pipeline extracts power spectral density (PSD) features across standard EEG frequency bands and employs a cascading 1D-CNN and LSTM network to capture spatial-frequency and temporal dynamics for **Valence**, **Arousal**, **dominance** and **liking** classification.
 
 ---
 
@@ -85,8 +85,8 @@ If you find this work or code useful in your research, please cite:
 
 ```bibtex
 @inproceedings{amiri2025eeg,
-  title={EEG-Based Emotion Recognition Using a Hybrid CNN-LSTM Architecture},
-  author={Amiri, Zahra and others},
+  title={A CNN LSTM Framework for EEG-Based Emotion Recognition},
+  author={Amiri, Zahra and Mansouri, Azadeh},
   booktitle={Proceedings of the International Conference on Computer and Knowledge Engineering (ICCKE)},
   year={2025}
 }
