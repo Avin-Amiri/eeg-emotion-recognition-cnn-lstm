@@ -15,17 +15,7 @@ Official implementation of the paper:
 
 ## 📌 Overview
 
-Accurate emotion recognition from electroencephalogram (EEG) signals requires capturing localized spectral-spatial patterns across critical brain regions as well as sequential dependencies across time segments.
-
-This repository provides an end-to-end deep learning framework that:
-1. **Extracts Band Power Spectral Density (PSD):** Decomposes raw EEG signals from 14 salient cortical channels across 5 frequency bands ($\theta$, $\alpha$, slow-$\beta$, $\beta$, $\gamma$) using a sliding window of 4 seconds (512 points) with step size of 0.125 seconds (16 points), generating a 70-dimensional spatial-spectral feature vector.
-2. **Deep Hierarchical Feature Extraction (3-Stage 1D-CNN):** Employs multi-scale 1D Convolutional blocks with Batch Normalization, Max Pooling, and Dropout (0.2) to capture hierarchical spatial representations.
-3. **Sequence & Dynamics Modeling (Regularized LSTM):** Utilizes an $L_2$-regularized Long Short-Term Memory layer to model temporal contextual transitions across feature representations.
-4. **Dense Classification:** Multi-layer perceptron (MLP) with Batch Normalization, Dropout, and $L_2$ regularization for binary emotion state classification (configured by default for Arousal; easily adjustable to Valence).
-
-Evaluated on the benchmark **DEAP (Database for Emotion Analysis using Physiological Signals)** dataset using stratified splits.
-
----
+The advancement of deep learning architectures, contributes to the effective design of methods for EEG based emotion recognition. In this code, a CNN-LSTM model is presented, where 1D-CNN reduces dimensionality and extracts meaningful features before passing to LSTM, which improving computational efficiency. This architecture provides better detection results compared to using either CNN or LSTM by combining these two model in an efficient way and change the window size in feature extracting to extract better features. The experimental results on the DEAP dataset demonstrate its superior performance.
 
 ## 🏛 Framework Architecture
 
@@ -34,7 +24,7 @@ Raw EEG Data (32 Subjects × 40 Trials × 14 Channels × 8064 Samples)
                               │
   [Sliding Window: Size=512 (4s), Step=16 (0.125s), Fs=128 Hz]
                               │
-  [Band-Power Feature Extraction (pe.bin_power): θ, α, slow-β, β, γ]
+    [Band-Power Feature Extraction (pe.bin_power): 4-8, 8-12, 12-16, 16-25, 25-45 Hz]
                               │
           Shape: (Batch, 70, 1) — 14 Channels × 5 Spectral Bands
                               │
@@ -65,18 +55,13 @@ Raw EEG Data (32 Subjects × 40 Trials × 14 Channels × 8064 Samples)
 
 ## 📊 Channel & Frequency Configurations
 
-### 1. Selected 14 EEG Channels (10–20 System)
-Frontal, Temporal, Parietal, and Occipital channels:
--  channel = [1, 2, 3, 4, 6, 11, 13, 17, 19, 20, 21, 25, 29, 31] ----> `Fp1`, `AF3`, `F3`, `F7`, `FC5`, `T7`, `P7`, `O1`, `Oz`, `Pz`, `Fp2`, `AF4`, `Fz`, `F4`
+### Selected 14 Channels (DEAP indices)
+Channels selected by array indices from the DEAP preprocessed dataset:
+`channel = [1, 2, 3, 4, 6, 11, 13, 17, 19, 20, 21, 25, 29, 31]`
 
-### 2. Frequency Bands
-| Frequency Band | Range (Hz) | Neural Relevance |
-|---|---|---|
-| **Theta ($\theta$)** | 4 – 8 Hz | Drowsiness, deep emotional states, meditation |
-| **Alpha ($\alpha$)** | 8 – 12 Hz | Relaxed alertness, internal focus |
-| **Slow Beta (slow-$\beta$)** | 12 – 16 Hz | Active processing, alertness |
-| **Beta ($\beta$)** | 16 – 25 Hz | Active thinking, focus, emotional arousal |
-| **Gamma ($\gamma$)** | 25 – 45 Hz | High-level cognitive processing, multi-modal integration |
+
+### Frequency Bands (pe.bin_power bins)
+Features are extracted using 5 spectral power bins defined by `[4, 8, 12, 16, 25, 45]` Hz:
 
 ---
 
@@ -109,7 +94,7 @@ source .venv/bin/activate    # On Windows: .venv\Scripts\activate
 ### 2. Install Dependencies
 
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 ---
@@ -135,9 +120,9 @@ python CNN_LSTM.py
 *Note: The target label is set to Arousal by default (`label_idx = 0`). Modify `label_idx` in `CNN_LSTM.py` for other dimensions (e.g., `1` for Valence).*
 
 ### Step 3: Outputs & Evaluation
-- Trained model weights are saved automatically to `results/best_model.keras`.
-- Learning curves are saved to `results/training_history.png`.
-- Test set performance and confusion matrix are saved to `results/confusion_matrix.png` and `results/results.pkl`.
+- Trained model weights are saved automatically to `root/best_model.keras`.
+- Learning curves are saved to `root/training_history.png`.
+- Test set performance and confusion matrix are saved to `root/confusion_matrix.png` and `results/results.pkl`.
 
 ---
 
