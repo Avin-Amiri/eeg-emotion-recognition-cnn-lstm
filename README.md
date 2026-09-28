@@ -1,6 +1,14 @@
 ````markdown
 ## A CNN LSTM Framework for EEG-Based Emotion Recognition
 
+
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
+[![PyTorch 2.x](https://img.shields.io/badge/PyTorch-2.x-EE4C2C.svg)](https://pytorch.org/)
+[![PyG](https://img.shields.io/badge/PyG-PyTorch--Geometric-3C2179.svg)](https://pyg.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
+
 This repository contains the official implementation of the hybrid deep learning model proposed for EEG-based emotion recognition using the **DEAP** dataset. The pipeline extracts power spectral density (PSD) features across standard EEG frequency bands and employs a cascading 1D-CNN and LSTM network to capture spatial-frequency and temporal dynamics for **Valence**, **Arousal**, **dominance** and **liking** classification.
 
 ---
